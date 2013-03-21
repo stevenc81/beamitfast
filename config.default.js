@@ -6,7 +6,7 @@ module.exports = {
   },
 
   db: {
-    user: 'beamitfast',
+    user: 'root',
     password: 'sqlpasswd',
     database: 'beamitfast',
     host: '127.0.0.1',
