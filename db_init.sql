@@ -3,7 +3,7 @@ USE beamitfast;
 
 CREATE TABLE IF NOT EXISTS `Users` (
   `ID` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `Username` varchar(40) NOT NULL,
+  `Username` varchar(40),
   -- max length a email address can have
   `Email` varchar(255) NOT NULL,
   -- SHA1 encryption produces a fixed-length 40 chars result
