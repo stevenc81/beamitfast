@@ -2,7 +2,9 @@
 /**
  * Module dependencies.
  */
-global.config = require("./config");
+global.config = require('./config');
+global.util = require('./util/util');
+global.errcode = require('./util/errorcode');
 
 var express = require('express'),
     routes = require('./routes'),
@@ -26,8 +28,12 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-    app.use(express.errorHandler());
+    // app.use(express.errorHandler());
+
+    // Use custom error handler
+    app.use(util.APIErrorHandler);
 });
+
 
 app.get('/', routes.index);
 app.get('/users', user.list);

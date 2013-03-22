@@ -1,47 +1,36 @@
 var flow = require('flow'),
     mysql = require('mysql');
 
-/*
- * GET users listing.
- */
-
-exports.list = function(req, res){
-    res.send("respond with a resource");
-};
-
 exports.signupValidate = function(req, res, next) {
 
     flow.exec(
         function() {
             var email = req.body.email;
-            var password = req.body.password || req.query.password;
-            var firstname = req.body.firstname || req.query.firstname;
-            var lastname = req.body.lastname || req.query.lastname;
-            var city = req.body.city || req.query.city;
+            var password = req.body.password;
+            var firstname = req.body.firstname;
+            var lastname = req.body.lastname;
+            var city = req.body.city;
 
             if (!email) {
-                console.log('missing email');
-                return;
+                throw new util.APIErr(errcode.MISSING_PARAMS, 'missing email');
             }
 
             if (!password) {
-                console.log('missing password');
-                return;
+                throw new util.APIErr(errcode.MISSING_PARAMS, 'missing password');
             }
 
             if (!firstname) {
-                console.log('missing first name');
-                return;
+                throw new util.APIErr(errcode.MISSING_PARAMS, 'missing first name');
             }
 
             if (!lastname) {
                 console.log('missing last name');
-                return;
+                throw new util.APIErr(errcode.MISSING_PARAMS, 'missing last name');
             }
 
             if (!city) {
                 console.log('missing city');
-                return;
+                throw new util.APIErr(errcode.MISSING_PARAMS, 'missing city');
             }
 
             next();
