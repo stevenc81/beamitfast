@@ -34,10 +34,8 @@ app.configure('development', function(){
     app.use(util.APIErrorHandler);
 });
 
-
 app.get('/', routes.index);
-app.get('/users', user.list);
-app.post('/users/signup', user.signupValidate, user.signup);
+app.post('/users/signup', user.validateSignup, user.signup);
 
 app.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));

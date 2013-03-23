@@ -10,6 +10,7 @@
         "jade": "*",
         "less-middleware": "*",
         "flow": "*",
-        "mysql": "*"
+        "mysql": "*",
+        "bcrypt": "*"
     }
 }

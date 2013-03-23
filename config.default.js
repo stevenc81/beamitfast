@@ -1,16 +1,15 @@
 module.exports = {
     api: {
         port: 8084,
-        host: 'api.beamitfast.com',
-        secret: 'shhh'
+        host: 'api.beamitfast.com'
     },
 
     db: {
         user: 'root',
-        password: 'sqlpasswd',
+        password: 'mysqlpasswd',
         database: 'beamitfast',
         host: '127.0.0.1',
         logging: true,
         debug: false
     }
-}
+};

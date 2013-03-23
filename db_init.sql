@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS `beamitfast` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 USE beamitfast;
 
+DROP TABLE IF EXISTS `Users`;
 CREATE TABLE IF NOT EXISTS `Users` (
   `ID` bigint unsigned NOT NULL AUTO_INCREMENT,
   `Username` varchar(40),
@@ -21,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   UNIQUE KEY `Email` (`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Details for each user';
 
+DROP TABLE IF EXISTS `RunRequests`;
 CREATE TABLE IF NOT EXISTS `RunRequests` (
   `ID` bigint unsigned NOT NULL AUTO_INCREMENT,
   `SenderId` bigint unsigned NOT NULL,
@@ -40,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `RunRequests` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Details for each run request';
 
+DROP TABLE IF EXISTS `RunTrans`;
 CREATE TABLE IF NOT EXISTS `RunTrans` (
   `ID` bigint unsigned NOT NULL AUTO_INCREMENT,
   `SenderId` bigint unsigned NOT NULL,

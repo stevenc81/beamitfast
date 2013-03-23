@@ -1,8 +1,8 @@
 var flow = require('flow'),
-    mysql = require('mysql');
+    mysql = require('mysql'),
+    bcrypt = require('bcrypt');
 
-exports.signupValidate = function(req, res, next) {
-
+exports.validateSignup = function(req, res, next) {
     flow.exec(
         function() {
             var email = req.body.email;
@@ -24,12 +24,10 @@ exports.signupValidate = function(req, res, next) {
             }
 
             if (!lastname) {
-                console.log('missing last name');
                 throw new util.APIErr(errcode.MISSING_PARAMS, 'missing last name');
             }
 
             if (!city) {
-                console.log('missing city');
                 throw new util.APIErr(errcode.MISSING_PARAMS, 'missing city');
             }
 
@@ -38,17 +36,31 @@ exports.signupValidate = function(req, res, next) {
     );
 };
 
-exports.signup = function(req, res) {
+exports.signup = function(req, res, next) {
+    var conn = mysql.createConnection(config.db);
     flow.exec(
         function() {
-            var connection = mysql.createConnection(config);
-            connection.connect();
+            var salt = bcrypt.genSaltSync(10);
+            var hashedPassword = bcrypt.hashSync( req.body.password, salt);
 
-            var queryString = [''];
-            connection.query(queryString, this);
-            connection.end();
-        }, function () {
+            conn.connect();
 
+            var queryString = 'INSERT INTO Users SET ?';
+            var post = {Email: req.body.email,
+                Password: hashedPassword,
+                FirstName: req.body.firstname,
+                LastName: req.body.lastname,
+                City: req.body.city};
+
+            conn.query(queryString, post, this);
+        }, function (err, result) {
+            if (err) {
+                throw err;
+            }
+
+            console.log(result.insertId);
+
+            conn.end();
         }
     );
 };
