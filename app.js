@@ -25,7 +25,7 @@ app.configure(function(){
 
     app.use(require('less-middleware')({ src: __dirname + '/public' }));
     app.use(express.static(path.join(__dirname, 'public')));
-    
+
     app.use(express.cookieParser()); 
     app.use(express.session(
         {
@@ -45,7 +45,7 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-app.post('/users/signup', user.validateSignup, user.signup);
+app.post('/users/signup', user.validateSignup, user.detectEmailDupe, user.signup);
 app.post('/users/signin', user.validateSignin, user.signin);
 
 app.listen(app.get('port'), function(){

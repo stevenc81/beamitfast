@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   -- max length a email address can have
   `Email` varchar(255) NOT NULL,
   -- SHA1 encryption produces a fixed-length 40 chars result
-  `Password` char(40) NOT NULL,
+  `Password` char(60) NOT NULL,
   -- 35 is suggested by standard but no harm having more
   `FirstName` varchar(255) NOT NULL,
   `LastName` varchar(255) NOT NULL,

@@ -1,8 +1,8 @@
 module.exports = {
-  // http
+  // errors that have http correspondence 
   MISSING_PARAMS: 400,
 
-  // User related 
+  // beamitfast defined error
   EMAIL_INUSE: 101,
   EMAIL_NOT_EXIST: 102,
   PASSWORD_INCORRECT: 103,
