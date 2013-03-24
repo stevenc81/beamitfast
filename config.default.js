@@ -11,5 +11,12 @@ module.exports = {
         host: '127.0.0.1',
         logging: true,
         debug: false
-    }
+    },
+
+    session: {
+    // key: 'beamitfast.sid',
+    secret: 'shh',
+    cookieDomain: '.beamitfast.com'
+  }
+  
 };

@@ -58,9 +58,61 @@ exports.signup = function(req, res, next) {
                 throw err;
             }
 
-            console.log(result.insertId);
+            console.log(result);
 
+            req.session.user = req.body.email;
+            res.send('success');
             conn.end();
         }
     );
 };
+
+exports.validateSignin = function(req, res, next) {
+    flow.exec(
+        function() {
+            var email = req.body.email;
+            var password = req.body.password;
+
+            if (!email) {
+                throw new util.APIErr(errcode.MISSING_PARAMS, 'missing email');
+            }
+
+            if (!password) {
+                throw new util.APIErr(errcode.MISSING_PARAMS, 'missing password');
+            }
+
+            next();
+        }
+    );
+};
+
+exports.signin = function(req, res, next) {
+    var conn = mysql.createConnection(config.db);
+    flow.exec(
+        function() {
+
+            conn.connect();
+
+            var queryString = 'SELECT * FROM Users WHERE Email = ' + mysql.escape(req.body.email);
+            conn.query(queryString, this);
+        }, function(err, rows, fields) {
+            if (err) {
+                throw err;
+            }
+            if (rows.length == 0) {
+                throw new util.APIErr(errcode.EMAIL_NOT_EXIST, 'no signup user with this email'); 
+            }
+
+            console.log(rows);
+
+            if (bcrypt.compareSync(req.body.password, rows[0].Password)) {
+                req.session.user = req.rows.Email;
+                res.send(req.user.toJSON());
+            } else {
+                throw new util.APIErr(errcode.PASSWORD_INCORRECT);
+            }
+
+            conn.end();
+        }
+    );
+}

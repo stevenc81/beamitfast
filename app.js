@@ -22,9 +22,19 @@ app.configure(function(){
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(app.router);
+
     app.use(require('less-middleware')({ src: __dirname + '/public' }));
     app.use(express.static(path.join(__dirname, 'public')));
+    
+    app.use(express.cookieParser()); 
+    app.use(express.session(
+        {
+        // key: config.session.key,
+        secret: config.session.secret,
+        cookie: {path: '/'}
+        }
+        ));
+    app.use(app.router);
 });
 
 app.configure('development', function(){
@@ -36,6 +46,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.post('/users/signup', user.validateSignup, user.signup);
+app.post('/users/signin', user.validateSignin, user.signin);
 
 app.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));
