@@ -9,7 +9,8 @@ global.errcode = require('./util/errorcode');
 var express = require('express'),
     routes = require('./routes'),
     user = require('./routes/user'),
-    http = require('http'),
+    auth = require('./routes/auth'),
+    run = require('./routes/run'),
     path = require('path');
 
 var app = express();
@@ -26,7 +27,7 @@ app.configure(function(){
     app.use(require('less-middleware')({ src: __dirname + '/public' }));
     app.use(express.static(path.join(__dirname, 'public')));
 
-    app.use(express.cookieParser()); 
+    app.use(express.cookieParser());
     app.use(express.session(
         {
         // key: config.session.key,
@@ -45,8 +46,18 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-app.post('/users/signup', user.validateSignup, user.detectEmailDupe, user.signup);
-app.post('/users/signin', user.validateSignin, user.signin);
+
+// user auth
+app.post('/signup', auth.validateSignup, auth.detectEmailDupe, auth.signup);
+app.post('/signin', auth.validateSignin, auth.signin);
+
+// user op
+app.get('/users', user.list);
+app.get('/users/:uid', user.view);
+
+// run create
+app.post('/runs/request', run.requireSignin, run.validateRequest, run.request);
+app.get('/runs', run.list);
 
 app.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));
