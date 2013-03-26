@@ -12,6 +12,9 @@
         "flow": "*",
         "mysql": "*",
         "bcrypt": "*",
-        "mocha": "*"
+        "mocha": "*",
+        "should": "*",
+        "request": "*",
+        "connect-memcached": "*"
     }
 }

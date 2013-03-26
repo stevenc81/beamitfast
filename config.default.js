@@ -17,6 +17,10 @@ module.exports = {
     // key: 'beamitfast.sid',
     secret: 'shh',
     cookieDomain: '.beamitfast.com'
+  },
+
+  memcached: {
+    server: '127.0.0.1',
+    port: 11211
   }
-  
 };

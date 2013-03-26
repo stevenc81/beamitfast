@@ -84,6 +84,7 @@ exports.signup = function(req, res, next) {
             }
             conn.end();
 
+            req.session.user = {};
             req.session.user.id = result.insertId;
             req.session.user.email = req.body.email;
             res.send('success');

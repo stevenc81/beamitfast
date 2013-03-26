@@ -8,7 +8,7 @@ module.exports = {
   EMAIL_INUSE: 101,
   EMAIL_NOT_EXIST: 102,
   PASSWORD_INCORRECT: 103,
-  SIGNIN_FAILED: 104
+  SIGNIN_FAILED: 104,
 
   // user lated error
   NO_SUCH_USER: 201,

@@ -7,11 +7,13 @@ global.util = require('./util/util');
 global.errcode = require('./util/errorcode');
 
 var express = require('express'),
+    MemcacheStore = require("connect-memcached")(express),
+    sessStore = new MemcacheStore({hosts: config.memcached.server + ':' + config.memcached.port}),
+    path = require('path'),
     routes = require('./routes'),
     user = require('./routes/user'),
     auth = require('./routes/auth'),
-    run = require('./routes/run'),
-    path = require('path');
+    run = require('./routes/run');
 
 var app = express();
 
@@ -30,9 +32,10 @@ app.configure(function(){
     app.use(express.cookieParser());
     app.use(express.session(
         {
-        // key: config.session.key,
+        key: config.session.key,
         secret: config.session.secret,
         cookie: {path: '/'}
+        // store: sessStore
         }
         ));
     app.use(app.router);
@@ -56,7 +59,7 @@ app.get('/users', user.list);
 app.get('/users/:uid', user.view);
 
 // run create
-app.post('/runs/request', run.requireSignin, run.validateRequest, run.request);
+app.post('/runs', run.requireSignin, run.validateRequest, run.request);
 app.get('/runs', run.list);
 
 app.listen(app.get('port'), function(){

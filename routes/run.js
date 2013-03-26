@@ -1,18 +1,18 @@
 var flow = require('flow'),
     mysql = require('mysql');
 
-exports.requireSignIn = function(req, res, next) {
-    if (req.session.user) {
+exports.requireSignin = function(req, res, next) {
+    if (req.session.user.id) {
         next();
+    } else {
+        return next(new util.APIErr(errcode.USER_NOT_SIGNEDIN));
     }
-
-    return next(new util.APIErr(errcode.USER_NOT_SIGNEDIN));
 };
 
 exports.validateRequest = function(req, res, next) {
     flow.exec(
         function() {
-            var receiver = req.body.reciver_id;
+            var receiver = req.body.receiver_id;
             var pickupLoc = req.body.pickup_loc;
             var dropoffLoc = req.body.dropoff_loc;
             var proposedPrice = req.body.proposed_price;
@@ -34,6 +34,8 @@ exports.validateRequest = function(req, res, next) {
 
                 return next(new util.APIErr(errcode.MISING_PARAMS, 'missing important paras'));
             }
+            
+            next();
         }
     );
 };
@@ -43,10 +45,10 @@ exports.request = function(req, res, next) {
 
     flow.exec(
         function() {
-            conn.connect();
+            conn.connect
 
             var queryString = 'INSERT INTO RunRequests SET ?';
-            var run = {SenderId: req.session.user,
+            var run = {SenderId: req.session.user.id,
                 ReceiverId: req.body.receiver_id,
                 PickupLoc: req.body.pickup_loc,
                 DropoffLoc: req.body.dropoff_loc,
@@ -70,5 +72,23 @@ exports.request = function(req, res, next) {
 };
 
 exports.list = function(req, res, next) {
+    var conn = mysql.createConnection(config.db);
 
+    flow.exec(
+        function() {
+            conn.connect();
+
+            var queryString = 'SELECT * FROM RunRequests';
+            conn.query(queryString, this);
+        }, function(err, rows, fields) {
+            if (err) {
+                throw err;
+            }
+            conn.end();
+
+            var rv = {runs: []};
+            rv.runs = rows;
+            res.send(rv);
+        }
+    )
 };
