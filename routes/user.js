@@ -19,8 +19,8 @@ exports.view = function(req, res, next) {
             }
             conn.end();
 
-            if (rows.length == 0) {
-                return next(new util.APIError(errorcode.NO_SUCH_USER));
+            if (rows.length === 0) {
+                return next(new util.APIErr(errcode.NO_SUCH_USER, 'user not found'));
             }
 
             var user = rows[0];
@@ -49,4 +49,4 @@ exports.list = function(req, res, next) {
             res.send(rv);
         }
     );
-}
+};

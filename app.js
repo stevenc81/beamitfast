@@ -34,8 +34,8 @@ app.configure(function(){
         {
         key: config.session.key,
         secret: config.session.secret,
-        cookie: {path: '/'}
-        // store: sessStore
+        cookie: {path: '/'},
+        store: sessStore
         }
         ));
     app.use(app.router);

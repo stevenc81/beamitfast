@@ -26,6 +26,32 @@ describe('Run', function() {
                     }
 
                     res.statusCode.should.be.equal(200);
+                    body.should.be.equal('success');
+
+                    done();
+                }
+            );
+        });
+    });
+});
+
+describe('Run', function() {
+    describe('#list()', function() {
+        it('should list all outstanding runs', function(done) {
+            request(
+                {
+                    method: 'GET',
+                    url: 'http://localhost:8084/runs',
+                    json: true,
+                    body: {}
+                }, function(err, res, body) {
+                    if (err) {
+                        done(err);
+                    }
+
+                    res.statusCode.should.be.equal(200);
+                    body.runs.length.should.be.equal(1);
+                    body.runs[0].DropOffLoc.should.be.equal('test_dropoff_loc');
 
                     done();
                 }

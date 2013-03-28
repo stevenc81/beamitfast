@@ -34,7 +34,7 @@ exports.validateRequest = function(req, res, next) {
 
                 return next(new util.APIErr(errcode.MISING_PARAMS, 'missing important paras'));
             }
-            
+
             next();
         }
     );
@@ -45,7 +45,7 @@ exports.request = function(req, res, next) {
 
     flow.exec(
         function() {
-            conn.connect
+            conn.connect();
 
             var queryString = 'INSERT INTO RunRequests SET ?';
             var run = {SenderId: req.session.user.id,
@@ -65,7 +65,7 @@ exports.request = function(req, res, next) {
                 throw err;
             }
             conn.end();
-            
+
             res.send('success');
         }
     );
@@ -90,5 +90,5 @@ exports.list = function(req, res, next) {
             rv.runs = rows;
             res.send(rv);
         }
-    )
+    );
 };

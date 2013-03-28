@@ -87,7 +87,7 @@ exports.signup = function(req, res, next) {
             req.session.user = {};
             req.session.user.id = result.insertId;
             req.session.user.email = req.body.email;
-            res.send('success');
+            res.send(req.session.user.email);
         }
     );
 };
@@ -136,7 +136,7 @@ exports.signin = function(req, res, next) {
             if (bcrypt.compareSync(req.body.password, user.Password)) {
                 req.session.user.id = user.ID;
                 req.session.user.email = user.Email;
-                res.send('success');
+                res.send(req.session.user.email);
             } else {
                 return next(new util.APIErr(errcode.PASSWORD_INCORRECT));
             }
