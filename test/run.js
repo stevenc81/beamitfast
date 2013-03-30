@@ -2,6 +2,43 @@ var should = require('should'),
     request = require('request');
 
 describe('Run', function() {
+    before(function(done) {
+        request(
+            {
+                method: 'POST',
+                url: 'http://localhost:8084/signin',
+                json: true,
+                body: {
+                    email: 'test_email',
+                    password: 'test_password'
+                }
+            }, function(err, res, body) {
+                if (err) {
+                    done(err);
+                }
+                
+                done();
+            }
+        );
+    });
+
+    after(function(done) {
+        request(
+            {
+                method: 'GET',
+                url: 'http://localhost:8084/signout',
+                json: true,
+                body: {}
+            }, function(err, res, body) {
+                if (err) {
+                    done(err);
+                }
+
+                done();
+            }
+        );
+    });
+    
     describe('#request()', function() {
         it('should request a run successfully', function(done) {
             request(
@@ -33,9 +70,7 @@ describe('Run', function() {
             );
         });
     });
-});
 
-describe('Run', function() {
     describe('#list()', function() {
         it('should list all outstanding runs', function(done) {
             request(

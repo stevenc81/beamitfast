@@ -4,14 +4,14 @@ var flow = require('flow'),
 // Since this depends on restful api so using email on url is going to cause issues.
 // We will use it when username is avaiable
 exports.view = function(req, res, next) {
-    var email = req.params.email;
+    var uid = req.params.uid;
     var conn = mysql.createConnection(config.db);
 
     flow.exec(
         function() {
             conn.connect();
-            var queryString = 'SELECT * FROM Users WHERE Email = ' + 
-                                mysql.escape(email);
+            var queryString = 'SELECT * FROM Users WHERE ID = ' + 
+                                mysql.escape(uid);
             conn.query(queryString, this);
         }, function(err, rows, fields) {
             if (err) {

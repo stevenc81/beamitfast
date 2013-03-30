@@ -92,3 +92,49 @@ exports.list = function(req, res, next) {
         }
     );
 };
+
+exports.end = function(req, res, next) {
+    var conn = mysql.createConnection(config.db);
+
+    flow.exec(
+        function() {
+            conn.connect();
+
+            var runId = req.params.id;
+            var queryString = 'DELETE FROM Runs WHERE ID = ' + 
+                                mysql.escape(req.params.id);
+
+            conn.query(queryString, this);
+        }, function(err, results) {
+            if (err) {
+                throw err;
+            }
+            conn.end();
+
+            res.send(results);
+        }
+    );
+};
+
+exports.archive = function(req, res, next) {
+    var conn = mysql.createConnection(config.db);
+
+    flow.exec(
+        function() {
+            conn.connect();
+
+            // var runId = req.params.id;
+            // var queryString = 'DELETE FROM Runs WHERE ID = ' + 
+            //                     mysql.escape(req.params.id);
+
+            // conn.query(queryString, this);
+        }, function(err, results) {
+            if (err) {
+                throw err;
+            }
+            conn.end();
+
+            res.send(results);
+        }
+    );
+};

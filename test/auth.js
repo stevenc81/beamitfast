@@ -29,9 +29,7 @@ describe('Auth', function() {
             );
         });
     });
-});
 
-describe('Auth', function() {
     describe('#signin()', function() {
         it('should signin the given user successfully', function(done) {
             request(
@@ -50,6 +48,28 @@ describe('Auth', function() {
 
                     res.statusCode.should.be.equal(200);
                     body.should.be.equal('test_email');
+
+                    done();
+                }
+            );
+        });
+    });
+
+    describe('#signout()', function() {
+        it('should signout the given user successfully', function(done) {
+            request(
+                {
+                    method: 'GET',
+                    url: 'http://localhost:8084/signout',
+                    json: true,
+                    body: {}
+                }, function(err, res, body) {
+                    if (err) {
+                        done(err);
+                    }
+
+                    res.statusCode.should.be.equal(200);
+                    body.should.be.equal('success');
 
                     done();
                 }

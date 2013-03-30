@@ -14,7 +14,7 @@ module.exports = {
     },
 
     session: {
-    // key: 'beamitfast.sid',
+    key: 'beamitfast.sid',
     secret: 'shh',
     cookieDomain: '.beamitfast.com'
   },

@@ -128,7 +128,7 @@ exports.signin = function(req, res, next) {
             }
             conn.end();
 
-            if (rows.length == 0) {
+            if (rows.length === 0) {
                 return next(new util.APIErr(errcode.EMAIL_NOT_EXIST, 'no signup user with this email')); 
             }
 
@@ -142,4 +142,21 @@ exports.signin = function(req, res, next) {
             }
         }
     );
-}
+};
+
+exports.signout = function(req, res, next) {
+    flow.exec(
+        function() {
+            if (req.session){
+                var uid = req.session.user.id;
+                res.clearCookie(config.session.key);
+                req.session.user = null;
+                req.session.destroy();
+
+                res.send('success');
+            } else {
+                res.send('success');
+            }
+        }
+    );
+};

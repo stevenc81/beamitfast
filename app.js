@@ -10,7 +10,6 @@ var express = require('express'),
     MemcacheStore = require("connect-memcached")(express),
     sessStore = new MemcacheStore({hosts: config.memcached.server + ':' + config.memcached.port}),
     path = require('path'),
-    routes = require('./routes'),
     user = require('./routes/user'),
     auth = require('./routes/auth'),
     run = require('./routes/run');
@@ -48,11 +47,10 @@ app.configure('development', function(){
     app.use(util.APIErrorHandler);
 });
 
-app.get('/', routes.index);
-
 // user auth
 app.post('/signup', auth.validateSignup, auth.detectEmailDupe, auth.signup);
 app.post('/signin', auth.validateSignin, auth.signin);
+app.get('/signout', auth.signout);
 
 // user op
 app.get('/users', user.list);
@@ -61,6 +59,8 @@ app.get('/users/:uid', user.view);
 // run create
 app.post('/runs', run.requireSignin, run.validateRequest, run.request);
 app.get('/runs', run.list);
+// end an run and move it to trans history
+app.delete('/runs/:id', run.requireSignin, run.end, run.archive);
 
 app.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));
