@@ -59,8 +59,10 @@ app.get('/users/:uid', user.view);
 // run create
 app.post('/runs', run.requireSignin, run.validateRequest, run.request);
 app.get('/runs', run.list);
+
 // end an run and move it to trans history
-app.delete('/runs/:id', run.requireSignin, run.end, run.archive);
+app.post('/runs/:id/archive', run.requireSignin, run.validateEndRun, run.archive, run.delete);
+app.delete('/runs/:id', run.requireSignin, run.delete);
 
 app.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));

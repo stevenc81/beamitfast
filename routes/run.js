@@ -93,25 +93,21 @@ exports.list = function(req, res, next) {
     );
 };
 
-exports.end = function(req, res, next) {
-    var conn = mysql.createConnection(config.db);
-
+exports.validateEndRun = function(req, res, next) {
     flow.exec(
         function() {
-            conn.connect();
+            var pickupTime = req.body.pickup_time;
+            var dropoffTime = req.body.dropoff_time;
+            var actualPrice = req.body.actual_price;
 
-            var runId = req.params.id;
-            var queryString = 'DELETE FROM Runs WHERE ID = ' + 
-                                mysql.escape(req.params.id);
+            if (!pickupTime ||
+                !dropoffTime ||
+                !actualPrice) {
 
-            conn.query(queryString, this);
-        }, function(err, results) {
-            if (err) {
-                throw err;
+                return next(new util.APIErr(errcode.MISING_PARAMS, 'missing important paras'));
             }
-            conn.end();
 
-            res.send(results);
+            next();
         }
     );
 };
@@ -123,18 +119,70 @@ exports.archive = function(req, res, next) {
         function() {
             conn.connect();
 
-            // var runId = req.params.id;
-            // var queryString = 'DELETE FROM Runs WHERE ID = ' + 
-            //                     mysql.escape(req.params.id);
+            var runId = req.params.id;
+            var queryString = 'SELECT * FROM RunRequests WHERE ID = ' + 
+                                mysql.escape(req.params.id);
 
-            // conn.query(queryString, this);
-        }, function(err, results) {
+            conn.query(queryString, this);
+        }, function(err, rows, fields) {
+            if (err) {
+                throw err;
+            }
+
+            if (rows.legnth === 0) {
+                return next(new util.APIErr(errcode.NO_SUCH_RUN, 'cant archive the specified run cuz it doesnt exist in DB'));
+            }
+
+            var run = rows[0];
+
+            var queryString = 'INSERT INTO RunTrans SET ?';
+            var runRow = {SenderId: run.SenderId,
+                ReceiverId: run.ReceiverId,
+                // only the sender can end a trip and archive it. The session belongs to him.
+                RunnerId: req.session.user.id,
+                PickupLoc: run.PickupLoc,
+                DropoffLoc: run.DropOffLoc,
+                PickupTime: req.body.pickup_time,
+                DropoffTime: req.body.dropoff_time,
+                ProposedPrice: run.ProposedPrice,
+                ActualPrice: req.body.actual_price,
+                TimeLimit: run.TimeLimit,
+                PackageWeight: run.PackageWeight,
+                PackageD1: run.PackageD1,
+                PackageD2: run.PackageD2,
+                PackageD3: run.PackageD3};
+
+            conn.query(queryString, runRow, this);
+        }, function(err, result) {
             if (err) {
                 throw err;
             }
             conn.end();
 
-            res.send(results);
+            next();
+        }
+    );
+};
+
+exports.delete = function(req, res, next) {
+    var conn = mysql.createConnection(config.db);
+    var runid = req.params.id;
+
+    flow.exec(
+        function() {
+            conn.connect();
+
+            var queryString = 'DELETE FROM RunRequests WHERE ID = ' + 
+                                mysql.escape(runid);
+
+            conn.query(queryString, this);
+        }, function(err, result) {
+            if (err) {
+                throw err;
+            }
+            conn.end();
+
+            res.send(JSON.stringify({deleted: runid}));
         }
     );
 };

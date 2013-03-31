@@ -115,7 +115,6 @@ exports.signin = function(req, res, next) {
     var conn = mysql.createConnection(config.db);
     flow.exec(
         function() {
-
             conn.connect();
 
             var queryString = 'SELECT * FROM Users WHERE Email = ' + 
@@ -134,6 +133,7 @@ exports.signin = function(req, res, next) {
 
             var user = rows[0];
             if (bcrypt.compareSync(req.body.password, user.Password)) {
+                req.session.user = {};
                 req.session.user.id = user.ID;
                 req.session.user.email = user.Email;
                 res.send(req.session.user.email);

@@ -12,6 +12,8 @@ module.exports = {
 
   // user lated error
   NO_SUCH_USER: 201,
-  USER_NOT_SIGNEDIN: 202
-  
+  USER_NOT_SIGNEDIN: 202,
+
+  // run related error
+  NO_SUCH_RUN: 301
 };
