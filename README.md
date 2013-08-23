@@ -1,4 +1,4 @@
-# Beamitfast API Server Setup
+# [Archived] Beamitfast API Server Setup
 
 ## Pre Install
 
